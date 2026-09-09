@@ -1,0 +1,32 @@
+# VoxGuard ML Training Configuration
+model:
+  name: facebook/wav2vec2-base
+  freeze_encoder_layers: 8
+  num_classes: 2
+  dropout: 0.3
+
+training:
+  epochs: 15
+  batch_size: 8
+  learning_rate: 1.0e-5
+  weight_decay: 0.01
+  warmup_steps: 500
+  max_audio_length_sec: 4.0
+  gradient_accumulation_steps: 4
+
+dataset:
+  name: ASVspoof2019_LA
+  train_protocol: ASVspoof2019.LA.cm.train.trn.txt
+  dev_protocol: ASVspoof2019.LA.cm.dev.trl.txt
+  eval_protocol: ASVspoof2019.LA.cm.eval.trl.txt
+  sample_rate: 16000
+
+optimizer:
+  name: AdamW
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+
+checkpoint:
+  save_dir: models/
+  save_best_only: true
+  metric: eer  # Save checkpoint with lowest EER

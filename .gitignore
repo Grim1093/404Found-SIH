@@ -1,0 +1,71 @@
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+*.egg-info/
+
+# ML model weights (large files)
+ml-service/models/*.pt
+ml-service/models/*.pth
+ml-service/models/*.bin
+ml-service/models/*.safetensors
+!ml-service/models/.gitkeep
+
+# Temporary files
+tmp/
+*.tmp
+ml-service/tmp/
+
+# Audio files (privacy — never commit raw audio)
+*.wav
+*.mp3
+*.flac
+*.ogg
+!frontend/public/sounds/
+
+# Spectrogram outputs
+ml-service/tmp/spectrograms/
+
+# Docker
+*.log
+
+# Alembic
+backend/alembic/versions/*.pyc
+
+# Coverage
+htmlcov/
+.coverage
+coverage.xml
+
+# ASVspoof dataset (too large for git)
+ml-service/training/data/
+ml-service/training/ASVspoof*/
+
+# Context files are tracked
+!context/
