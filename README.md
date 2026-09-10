@@ -3,15 +3,14 @@
 ## 1. Project Information
 
 - **Project Title:** VoxGuard – AI-Powered Real-Time Voice Cloning Detection & Prevention
-- **PS ID:** SIH2026-1742
-- **PS Title:** AI-based real-time voice cloning detection and prevention framework for secure communications
+- **PS ID:** SIH2026-26104
+- **PS Title:** AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Attacks
 - **Category:** Software
 - **Theme:** Smart Automation / Cyber Security
 
 ## 2. Problem Statement
 
-Generative AI and neural speech synthesis can now produce high-fidelity voice clones from just a few seconds of recorded audio. Threat actors exploit this to impersonate CXOs, government officials, and trusted individuals — initiating fraudulent financial transactions, manipulating employees into bypassing verification procedures, and conducting social engineering attacks across VoIP, mobile networks, and enterprise platforms.
-
+AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Attacks
 Existing defenses fail because:
 
 - **Caller ID** is trivially spoofable
