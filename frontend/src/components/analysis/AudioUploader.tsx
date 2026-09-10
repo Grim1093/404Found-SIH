@@ -19,6 +19,7 @@ export function AudioUploader({ onUploadSuccess }: AudioUploaderProps) {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
+      console.log("[AudioUploader] Step 1: File dropped/selected:", acceptedFiles[0].name);
       setFile(acceptedFiles[0]);
     }
   }, []);
@@ -36,36 +37,62 @@ export function AudioUploader({ onUploadSuccess }: AudioUploaderProps) {
   });
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (!file) {
+      console.log("[AudioUploader] Upload aborted: No file selected.");
+      return;
+    }
 
+    console.log("[AudioUploader] Step 2: Preparing upload for:", file.name);
     setIsUploading(true);
     setProgress(0);
     
     const formData = new FormData();
-    formData.append('file', file);
-    // caller_id is optional but let's send a dummy or filename
+    console.log("[AudioUploader] Step 3: Appending 'audio' to FormData.");
+    formData.append('audio', file);
+    
+    console.log("[AudioUploader] Step 4: Appending dummy 'caller_id'.");
     formData.append('caller_id', 'manual-upload');
 
     try {
+      console.log("[AudioUploader] Step 5: Sending POST request to backend...");
+      
+      // CRITICAL FIX: Removed the manual headers block entirely.
+      // Axios/Fetch will now automatically detect the FormData and set the correct 
+      // Content-Type with the necessary auto-generated boundary string.
       const response = await api.post('/api/analysis/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
         onUploadProgress: (progressEvent) => {
           if (progressEvent.total) {
             const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
             setProgress(percentCompleted);
+            console.log(`[AudioUploader] Upload progress: ${percentCompleted}%`);
           }
         },
       });
 
+      console.log("[AudioUploader] Step 6: Upload successful, response:", response.data);
       toast.success('Audio uploaded successfully');
-      // response.data should have call id, or analysis result directly depending on backend
-      // Assuming it returns an AnalysisResult or Call. Wait, the backend returns AnalysisResult which has call_id.
+      
+      console.log("[AudioUploader] Step 7: Triggering onUploadSuccess with call_id:", response.data.call_id);
       onUploadSuccess(response.data.call_id);
+      
     } catch (err: any) {
-      toast.error(err.response?.data?.detail || 'Upload failed');
+      console.error("[AudioUploader] Upload Failed! Error details:", err);
+      
+      let errorMessage = 'Upload failed due to an unknown error.';
+      const detail = err.response?.data?.detail;
+      
+      if (Array.isArray(detail)) {
+        errorMessage = detail.map((d: any) => `${d.loc.join('.')} - ${d.msg}`).join(', ');
+      } else if (typeof detail === 'string') {
+        errorMessage = detail;
+      } else if (err.message) {
+        errorMessage = err.message;
+      }
+
+      console.log("[AudioUploader] Step 6 (Failure): Extracted error message:", errorMessage);
+      toast.error(errorMessage);
     } finally {
+      console.log("[AudioUploader] Step 8: Upload process finished, resetting states.");
       setIsUploading(false);
     }
   };
@@ -104,7 +131,10 @@ export function AudioUploader({ onUploadSuccess }: AudioUploaderProps) {
             
             {!isUploading && (
               <button 
-                onClick={() => setFile(null)}
+                onClick={() => {
+                  console.log("[AudioUploader] File cleared by user.");
+                  setFile(null);
+                }}
                 className="text-text-secondary hover:text-text-primary hover:bg-surface-hover p-2 rounded-full transition-colors focus:outline-none"
               >
                 <X size={20} />
@@ -129,7 +159,10 @@ export function AudioUploader({ onUploadSuccess }: AudioUploaderProps) {
 
           <div className="flex justify-end gap-3">
             {!isUploading && (
-              <Button variant="ghost" onClick={() => setFile(null)}>
+              <Button variant="ghost" onClick={() => {
+                console.log("[AudioUploader] Upload canceled by user.");
+                setFile(null);
+              }}>
                 Cancel
               </Button>
             )}
