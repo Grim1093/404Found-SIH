@@ -6,7 +6,7 @@
 - **PS ID:** SIH2026-26104
 - **PS Title:** AI-Powered Real-Time Detection and Prevention of Voice Cloning Impersonation Attacks
 - **Category:** Software
-- **Theme:** Smart Automation / Cyber Security
+- **Theme:** Blockchain & Cybersecurity
 
 ## 2. Problem Statement
 
